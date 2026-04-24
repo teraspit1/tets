@@ -33,6 +33,8 @@ class EngineApp:
     def initialize(self) -> None:
         self.renderer.initialize()
         self.logger.info("Engine initialized with backend: %s", self.renderer.backend_name)
+        if self.renderer.last_init_error:
+            self.logger.warning(self.renderer.last_init_error)
 
     def tick(self) -> None:
         self.time.update()
@@ -43,11 +45,15 @@ class EngineApp:
         self.renderer.render(self.scene, self.debug_overlay)
         self.debug_overlay.tick()
 
-    def run(self) -> None:
+    def run(self, max_frames: int | None = None) -> None:
         self.running = True
         self.initialize()
+        frame = 0
         while self.running and not self.renderer.should_close():
             self.tick()
+            frame += 1
+            if max_frames is not None and frame >= max_frames:
+                break
         self.shutdown()
 
     def shutdown(self) -> None:

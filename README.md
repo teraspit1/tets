@@ -40,6 +40,7 @@ TETS Engine is split into runtime engine systems and editor tooling with a share
   - color quantization depth
   - low-res scaling
   - dithering toggle
+- If Vulkan fails, the fallback backend auto-closes after a configurable number of frames to avoid silent hangs.
 
 ### Editor
 - `EditorApp` orchestrates:
@@ -117,7 +118,9 @@ README.md
    - `pip install numpy glfw vulkan pyimgui`
 2. Run demo bootstrap:
    - `python main.py`
-3. For realtime runtime loop, uncomment `engine.run()` in `examples/demo_project.py`.
+3. Optional: limit runtime frames for diagnostics/headless execution:
+   - `python main.py --max-frames 120`
+4. If Vulkan init fails, check `engine.log` for backend fallback reason.
 
 ## 6. HOW TO EXTEND
 

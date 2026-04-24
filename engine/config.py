@@ -14,6 +14,7 @@ class EngineConfig:
     backend: str = "vulkan"  # vulkan | moderngl
     low_res_scale: float = 0.5
     vsync: bool = True
+    fallback_auto_close_frames: int = 1
 
 
 class ConfigManager:

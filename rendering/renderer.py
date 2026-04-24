@@ -17,6 +17,7 @@ class Renderer:
         )
         self.backend = None
         self.backend_name = "unknown"
+        self.last_init_error: str | None = None
 
     def initialize(self) -> None:
         if self.config.backend == "vulkan":
@@ -27,12 +28,17 @@ class Renderer:
                 self.backend.initialize()
                 self.backend_name = self.backend.name
                 return
-            except Exception:
-                pass
+            except Exception as exc:
+                self.last_init_error = f"Vulkan init failed: {exc}"
 
         from rendering.moderngl_backend import ModernGLBackend
 
-        self.backend = ModernGLBackend(self.config.width, self.config.height, self.config.window_title)
+        self.backend = ModernGLBackend(
+            self.config.width,
+            self.config.height,
+            self.config.window_title,
+            auto_close_after_frames=self.config.fallback_auto_close_frames,
+        )
         self.backend.initialize()
         self.backend_name = self.backend.name
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import argparse
+
 from editor.editor_app import EditorApp
 from engine.app import EngineApp
 from ecs.components import AABBCollider, Camera, MeshRenderer, RigidBody, Transform
@@ -41,12 +43,14 @@ def build_demo(engine: EngineApp) -> EditorApp:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Run TETS engine demo project")
+    parser.add_argument("--max-frames", type=int, default=None, help="Optional hard cap for update frames")
+    args = parser.parse_args()
+
     engine = EngineApp()
     editor = build_demo(engine)
     _ = editor.draw()
-    # For CI/sandbox safety, avoid entering the infinite realtime loop by default.
-    # Uncomment to run interactively on a machine with windowing + Vulkan drivers:
-    # engine.run()
+    engine.run(max_frames=args.max_frames)
 
 
 if __name__ == "__main__":
