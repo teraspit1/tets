@@ -10,7 +10,7 @@ def main() -> int:
         missing = exc.name or "unknown"
         print(
             f"[TETS] Missing dependency: {missing}. "
-            "Install required packages: pip install numpy glfw vulkan pyimgui",
+            "Install required packages: pip install numpy glfw vulkan imgui-bundle moderngl",
             file=sys.stderr,
         )
         return 1

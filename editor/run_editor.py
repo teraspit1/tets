@@ -2,47 +2,38 @@ from __future__ import annotations
 
 
 def run_editor(engine, editor_app, max_frames: int | None = None) -> None:
-    import glfw  # type: ignore
-    import imgui  # type: ignore
-    from imgui.integrations.glfw import GlfwRenderer  # type: ignore
+    try:
+        from imgui_bundle import hello_imgui, imgui, immapp  # type: ignore
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "imgui_bundle is required for editor mode. Install with: pip install imgui-bundle"
+        ) from exc
 
     from editor.imgui_editor import ImGuiEditor
 
-    if not glfw.init():
-        raise RuntimeError("GLFW init failed for editor")
-
-    glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
-    glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
-    window = glfw.create_window(engine.config.width, engine.config.height, f"{engine.config.window_title} Editor", None, None)
-    if window is None:
-        glfw.terminate()
-        raise RuntimeError("Failed to create editor window")
-
-    glfw.make_context_current(window)
-    imgui.create_context()
-    impl = GlfwRenderer(window)
-
     gui = ImGuiEditor(engine, editor_app)
-
     engine.initialize()
-    frame = 0
-    while not glfw.window_should_close(window):
-        glfw.poll_events()
-        impl.process_inputs()
-        imgui.new_frame()
 
+    frame_count = {"value": 0}
+
+    runner_params = hello_imgui.RunnerParams()
+    runner_params.app_window_params.window_title = f"{engine.config.window_title} Editor"
+    runner_params.app_window_params.window_geometry.size = (
+        int(engine.config.width),
+        int(engine.config.height),
+    )
+
+    def show_gui() -> None:
         engine.tick()
         gui.draw(imgui)
+        frame_count["value"] += 1
+        if max_frames is not None and frame_count["value"] >= max_frames:
+            runner_params.app_shall_exit = True
 
-        imgui.render()
-        impl.render(imgui.get_draw_data())
-        glfw.swap_buffers(window)
+    def before_exit() -> None:
+        engine.shutdown()
 
-        frame += 1
-        if max_frames is not None and frame >= max_frames:
-            break
+    runner_params.callbacks.show_gui = show_gui
+    runner_params.callbacks.before_exit = before_exit
 
-    impl.shutdown()
-    glfw.destroy_window(window)
-    glfw.terminate()
-    engine.shutdown()
+    immapp.run(runner_params)

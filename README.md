@@ -115,7 +115,7 @@ README.md
 ## 5. HOW TO RUN
 
 1. Create virtual env and install dependencies:
-   - `pip install numpy glfw vulkan pyimgui`
+   - `pip install numpy glfw vulkan imgui-bundle moderngl`
 2. Launch interactive editor (default mode):
    - `python main.py --mode editor`
 3. Launch runtime-only game mode:
@@ -146,7 +146,7 @@ README.md
 
 - Vulkan backend is a scaffold and does not yet create full device/command buffer pipelines.
 - ModernGL fallback now renders a minimal PS1-style triangle for visible output and debugging.
-- Editor UI is now ImGui MVP; advanced dockspace layout/state persistence and full viewport rendering are still in progress.
+- Editor UI now runs via imgui_bundle MVP; advanced dockspace layout/state persistence and full viewport rendering are still in progress.
 - Physics is intentionally minimal and not deterministic/network-ready.
 
 ## Zip Packaging

@@ -57,7 +57,8 @@ class ImGuiEditor:
         imgui.begin("Hierarchy")
         for entity, node in self.engine.scene.nodes.items():
             selected = self.editor.state.selected_entity == entity
-            clicked, _ = imgui.selectable(f"{entity} | {node.name}", selected)
+            selected_ret = imgui.selectable(f"{entity} | {node.name}", selected)
+            clicked = selected_ret[0] if isinstance(selected_ret, tuple) else bool(selected_ret)
             if clicked:
                 self.editor.state.selected_entity = entity
         imgui.end()
@@ -195,6 +196,8 @@ class ImGuiEditor:
             self.message = self.shader_status
 
     def draw(self, imgui) -> None:
+        if hasattr(imgui, "dock_space_over_viewport"):
+            imgui.dock_space_over_viewport()
         self._watch_shader_files()
         self._draw_toolbar(imgui)
         self._draw_hierarchy(imgui)
