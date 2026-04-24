@@ -139,35 +139,32 @@ class ImGuiEditor:
                 self.message = "Graph executed"
         imgui.end()
 
+    def _imgui_window_pos(self, imgui):
+        fn = getattr(imgui, "get_window_pos", None) or getattr(imgui, "get_window_position", None)
+        return fn() if fn is not None else type("P", (), {"x": 0.0, "y": 0.0})()
+
+    def _imgui_content_region_avail(self, imgui):
+        fn = getattr(imgui, "get_content_region_avail", None) or getattr(imgui, "get_content_region_available", None)
+        return fn() if fn is not None else type("S", (), {"x": 1.0, "y": 1.0})()
+
+    def _imgui_mouse_pos(self, imgui):
+        fn = getattr(imgui, "get_mouse_pos", None)
+        return fn() if fn is not None else type("M", (), {"x": 0.0, "y": 0.0})()
+
     def _draw_viewport(self, imgui) -> None:
         imgui.begin("Viewport")
-        pos = imgui.get_window_position()
-        size = imgui.get_content_region_available()
-        self.viewport = ViewportRect(pos.x, pos.y + 20, max(1.0, size.x), max(1.0, size.y - 20))
+        pos = self._imgui_window_pos(imgui)
+        size = self._imgui_content_region_avail(imgui)
+        self.viewport = ViewportRect(pos.x, pos.y + 20, max(1.0, float(size.x)), max(1.0, float(size.y - 20)))
 
-        draw_list = imgui.get_window_draw_list()
-        draw_list.add_rect(
-            self.viewport.x,
-            self.viewport.y,
-            self.viewport.x + self.viewport.w,
-            self.viewport.y + self.viewport.h,
-            imgui.get_color_u32_rgba(0.2, 0.2, 0.25, 1.0),
-            0.0,
-            0,
-            2.0,
-        )
+        imgui.text("Viewport picking area")
+        if hasattr(imgui, "invisible_button"):
+            imgui.invisible_button("viewport_canvas", (self.viewport.w, self.viewport.h))
 
-        for entity, (transform,) in self.engine.world.query(Transform):
-            sx, sy = self._project_to_viewport(transform.position)
-            color = imgui.get_color_u32_rgba(1.0, 0.4, 0.2, 1.0)
-            if self.editor.state.selected_entity == entity:
-                color = imgui.get_color_u32_rgba(0.2, 1.0, 0.4, 1.0)
-            draw_list.add_circle_filled(sx, sy, 6.0, color)
-
-        hovered = imgui.is_window_hovered()
+        hovered = imgui.is_window_hovered() if hasattr(imgui, "is_window_hovered") else False
         if hovered and imgui.is_mouse_clicked(0):
-            mx, my = imgui.get_mouse_pos()
-            picked = self._pick_entity(mx, my)
+            mouse = self._imgui_mouse_pos(imgui)
+            picked = self._pick_entity(float(mouse.x), float(mouse.y))
             if picked is not None:
                 self.editor.state.selected_entity = picked
                 self.message = f"Picked entity {picked}"
