@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from array import array
 
 
 class ModernGLBackend:
@@ -70,23 +71,26 @@ class ModernGLBackend:
         )
 
         vertices = self.ctx.buffer(
-            data=(
-                -0.6,
-                -0.5,
-                1.0,
-                0.1,
-                0.1,
-                0.6,
-                -0.5,
-                0.1,
-                1.0,
-                0.1,
-                0.0,
-                0.6,
-                0.1,
-                0.1,
-                1.0,
-            )
+            data=array(
+                "f",
+                [
+                    -0.6,
+                    -0.5,
+                    1.0,
+                    0.1,
+                    0.1,
+                    0.6,
+                    -0.5,
+                    0.1,
+                    1.0,
+                    0.1,
+                    0.0,
+                    0.6,
+                    0.1,
+                    0.1,
+                    1.0,
+                ],
+            ).tobytes()
         )
         self.vbo = vertices
         self.vao = self.ctx.vertex_array(self.program, [(self.vbo, "2f 3f", "in_pos", "in_color")])
