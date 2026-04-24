@@ -24,10 +24,15 @@ class Renderer:
             try:
                 from rendering.vulkan_backend import VulkanBackend
 
-                self.backend = VulkanBackend(self.config.width, self.config.height, self.config.window_title)
-                self.backend.initialize()
-                self.backend_name = self.backend.name
-                return
+                candidate = VulkanBackend(self.config.width, self.config.height, self.config.window_title)
+                candidate.initialize()
+                if getattr(candidate, "supports_visible_rendering", False):
+                    self.backend = candidate
+                    self.backend_name = candidate.name
+                    return
+
+                self.last_init_error = "Vulkan backend is initialized but not yet capable of visible rendering; switching to ModernGL."
+                candidate.shutdown()
             except Exception as exc:
                 self.last_init_error = f"Vulkan init failed: {exc}"
 

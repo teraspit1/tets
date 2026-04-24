@@ -12,12 +12,15 @@ class SwapchainInfo:
 
 class VulkanBackend:
     """
-    Minimal Vulkan backend scaffold using python-vulkan + glfw.
-    This intentionally keeps API calls light so the engine remains runnable
-    in environments where Vulkan drivers are not available.
+    Vulkan bootstrap scaffold.
+
+    NOTE: This class currently opens a Vulkan-compatible GLFW window and handles
+    app lifecycle only. It does not yet record command buffers or present drawn
+    images, so it should not be used as the active render path for visible output.
     """
 
     name = "vulkan"
+    supports_visible_rendering = False
 
     def __init__(self, width: int, height: int, title: str) -> None:
         self.width = width

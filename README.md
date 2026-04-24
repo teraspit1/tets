@@ -121,6 +121,7 @@ README.md
 3. Optional: limit runtime frames for diagnostics/headless execution:
    - `python main.py --max-frames 120`
 4. If Vulkan init fails, check `engine.log` for backend fallback reason.
+5. By default Vulkan scaffold auto-switches to ModernGL for visible rendering until full Vulkan draw pipeline is implemented.
 
 ## 6. HOW TO EXTEND
 
@@ -133,7 +134,7 @@ README.md
 ## 7. LIMITATIONS
 
 - Vulkan backend is a scaffold and does not yet create full device/command buffer pipelines.
-- ModernGL fallback is lifecycle-compatible but currently no-op rendering.
+- ModernGL fallback now renders a minimal PS1-style triangle for visible output and debugging.
 - Editor rendering is data-model-based; pyimgui draw calls are integration TODOs.
 - Physics is intentionally minimal and not deterministic/network-ready.
 
