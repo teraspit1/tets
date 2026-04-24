@@ -116,12 +116,23 @@ README.md
 
 1. Create virtual env and install dependencies:
    - `pip install numpy glfw vulkan pyimgui`
-2. Run demo bootstrap:
-   - `python main.py`
-3. Optional: limit runtime frames for diagnostics/headless execution:
-   - `python main.py --max-frames 120`
-4. If Vulkan init fails, check `engine.log` for backend fallback reason.
-5. By default Vulkan scaffold auto-switches to ModernGL for visible rendering until full Vulkan draw pipeline is implemented.
+2. Launch interactive editor (default mode):
+   - `python main.py --mode editor`
+3. Launch runtime-only game mode:
+   - `python main.py --mode game`
+4. Optional: limit runtime frames for diagnostics/headless execution:
+   - `python main.py --mode editor --max-frames 120`
+5. If Vulkan init fails, check `engine.log` for backend fallback reason.
+6. By default Vulkan scaffold auto-switches to ModernGL for visible rendering until full Vulkan draw pipeline is implemented.
+
+
+### Editor Features (current MVP)
+- Dockable ImGui windows (toolbar, hierarchy, inspector, viewport, assets, visual scripting).
+- Runtime Transform editing in Inspector (drag X/Y/Z).
+- Entity picking in viewport via mouse click over projected entity markers.
+- Visual scripting panel with graph creation and one-click graph execution.
+- Scene Save/Load buttons in toolbar (`assets/scene_autosave.json`).
+- Shader hot-reload indicator based on `assets/shaders` file changes.
 
 ## 6. HOW TO EXTEND
 
@@ -135,7 +146,7 @@ README.md
 
 - Vulkan backend is a scaffold and does not yet create full device/command buffer pipelines.
 - ModernGL fallback now renders a minimal PS1-style triangle for visible output and debugging.
-- Editor rendering is data-model-based; pyimgui draw calls are integration TODOs.
+- Editor UI is now ImGui MVP; advanced dockspace layout/state persistence and full viewport rendering are still in progress.
 - Physics is intentionally minimal and not deterministic/network-ready.
 
 ## Zip Packaging

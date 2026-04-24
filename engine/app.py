@@ -6,6 +6,7 @@ from engine.hotreload import HotReloadService
 from engine.logger import setup_logger
 from engine.time import Time
 from ecs.ecs_world import ECSWorld
+from ecs.resources import ResourceManager
 from ecs.scene import Scene
 from input.input_manager import InputManager
 from physics.physics_world import PhysicsWorld
@@ -23,6 +24,7 @@ class EngineApp:
         self.world = ECSWorld()
         self.scene = Scene("MainScene", self.world)
         self.physics = PhysicsWorld(self.world)
+        self.resources = ResourceManager()
         self.input = InputManager()
         self.renderer = Renderer(self.config)
         self.visual_runtime = VisualScriptRuntime(self.world)

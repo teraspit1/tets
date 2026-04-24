@@ -45,12 +45,19 @@ def build_demo(engine: EngineApp) -> EditorApp:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run TETS engine demo project")
     parser.add_argument("--max-frames", type=int, default=None, help="Optional hard cap for update frames")
+    parser.add_argument("--mode", choices=["editor", "game"], default="editor", help="Launch mode")
     args = parser.parse_args()
 
     engine = EngineApp()
     editor = build_demo(engine)
     _ = editor.draw()
-    engine.run(max_frames=args.max_frames)
+
+    if args.mode == "editor":
+        from editor.run_editor import run_editor
+
+        run_editor(engine, editor, max_frames=args.max_frames)
+    else:
+        engine.run(max_frames=args.max_frames)
 
 
 if __name__ == "__main__":
