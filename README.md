@@ -127,11 +127,13 @@ README.md
 
 
 ### Editor Features (current MVP)
-- Dockable ImGui windows (toolbar, hierarchy, inspector, viewport, assets, visual scripting).
-- Runtime Transform editing in Inspector (drag X/Y/Z).
-- Entity picking in viewport via mouse click over projected entity markers.
-- Visual scripting panel with graph creation and one-click graph execution.
+- Dockspace-based ImGui windows (toolbar, hierarchy, inspector, viewport, assets, visual scripting).
+- Create/Delete entities directly in editor (toolbar + hierarchy).
+- Runtime Transform editing in Inspector (drag X/Y/Z) and one-click component add (Transform/RigidBody/AABB/Camera/MeshRenderer).
+- Entity picking in viewport via mouse click.
+- Visual scripting panel with node creation (Start/Update/Branch/Add/Translate), manual link creation, and graph execution from UI.
 - Scene Save/Load buttons in toolbar (`assets/scene_autosave.json`).
+- Asset registration UI for mesh/texture/shader resources.
 - Shader hot-reload indicator based on `assets/shaders` file changes.
 
 ## 6. HOW TO EXTEND
